@@ -61,10 +61,10 @@ public class SnakeStage : MonoBehaviour {
 
   void Update()
   {
-    if (!souldUpdate()) return;
+    if (!shouldUpdate()) return;
   }
 
-  private bool souldUpdate()
+  private bool shouldUpdate()
   {
     _updateCount += Time.deltaTime;
     if (_updateCount <= UpdateRate) return false;
@@ -107,9 +107,7 @@ public class SnakeStage : MonoBehaviour {
     gameObj.transform.parent = gameObject.transform;
     return gameObj;
   }
-
-
-
+  
   private GameObject CreateCell(int r, int c)
   {
     return CreateObject(Cell, r, c);
