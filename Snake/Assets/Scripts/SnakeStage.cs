@@ -1,6 +1,7 @@
 ﻿
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 using Assets.Scripts;
 
@@ -49,6 +50,10 @@ public class SnakeStage : MonoBehaviour {
 
   private readonly GameObject[,] _cells = new GameObject[Rows, Columns];
 
+  private Vector3 _snakeDir = new Vector3(0, -1, 0);
+  // 配列だが複数形でないので注意
+  private List<GameObject> _snake = new List<GameObject>();
+
   void Start()
   {
     InitGame();
@@ -57,7 +62,6 @@ public class SnakeStage : MonoBehaviour {
   void Update()
   {
     if (!souldUpdate()) return;
-    Debug.Log("update");
   }
 
   private bool souldUpdate()
@@ -71,6 +75,7 @@ public class SnakeStage : MonoBehaviour {
   private void InitGame()
   {
     InitCells();
+    InitSnake();
   }
 
   private void InitCells()
@@ -84,14 +89,26 @@ public class SnakeStage : MonoBehaviour {
     }
   }
 
+  private void InitSnake()
+  {
+    SnakeHead.GetComponent<Snake>().Type = SnakeType.Head;
+    SnakeBody.GetComponent<Snake>().Type = SnakeType.Body;
+    _snake.Add(CreateSnakeHead(0, Columns - 4));
+    _snake.Add(CreateSnakeBody(0, Columns - 3));
+    _snake.Add(CreateSnakeBody(0, Columns - 2));
+    _snake.Add(CreateSnakeBody(0, Columns - 1));
+  }
+
   private GameObject CreateObject(GameObject origin, int r, int c)
   {
     var gameObj = Instantiate(origin);
-    gameObj.name = Cell.name + "(" + r + "," + c + ")";
+    gameObj.name = origin.name + "(" + r + "," + c + ")";
     gameObj.transform.Translate(r, c, 0);
     gameObj.transform.parent = gameObject.transform;
     return gameObj;
   }
+
+
 
   private GameObject CreateCell(int r, int c)
   {
