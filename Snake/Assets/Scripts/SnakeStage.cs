@@ -23,6 +23,21 @@ public class SnakeStage : MonoBehaviour {
 
   void Start()
   {
+    InitGame();
+  }
+
+  void Update()
+  {
+    Debug.Log(Time.deltaTime);
+  }
+
+  private void InitGame()
+  {
+    InitCells();
+  }
+
+  private void InitCells()
+  {
     for (var r = 0; r < Rows; r++)
     {
       for (var c = 0; c < Columns; c++)
@@ -30,11 +45,6 @@ public class SnakeStage : MonoBehaviour {
         _cells[r, c] = CreateCell(r, c);
       }
     }
-  }
-
-  void Update()
-  {
-    Debug.Log(Time.deltaTime);
   }
 
   private GameObject CreateObject(GameObject origin, int r, int c)
