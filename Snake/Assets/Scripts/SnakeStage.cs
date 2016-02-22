@@ -2,6 +2,8 @@
 using UnityEngine;
 using System.Collections;
 
+using Assets.Scripts;
+
 
 public class SnakeStage : MonoBehaviour {
 
@@ -11,7 +13,7 @@ public class SnakeStage : MonoBehaviour {
     get
     {
       if (_cell != null) return _cell;
-      _cell = Resources.Load<GameObject>("Cell");
+      _cell = Resources.Load<GameObject>("Cell/Cell");
       return _cell;
     }
   }
@@ -22,7 +24,7 @@ public class SnakeStage : MonoBehaviour {
     get
     {
       if (_snakeHead != null) return _snakeHead;
-      _snakeHead = Resources.Load<GameObject>("SnakeHead");
+      _snakeHead = Resources.Load<GameObject>("Snake/Head");
       return _snakeHead;
     }
   }
@@ -33,7 +35,7 @@ public class SnakeStage : MonoBehaviour {
     get
     {
       if (_snakeBody != null) return _snakeBody;
-      _snakeBody = Resources.Load<GameObject>("SnakeBody");
+      _snakeBody = Resources.Load<GameObject>("Snake/Body");
       return _snakeBody;
     }
   }
@@ -94,5 +96,15 @@ public class SnakeStage : MonoBehaviour {
   private GameObject CreateCell(int r, int c)
   {
     return CreateObject(Cell, r, c);
+  }
+
+  private GameObject CreateSnakeHead(int r, int c)
+  {
+    return CreateObject(SnakeHead, r, c);
+  }
+
+  private GameObject CreateSnakeBody(int r, int c)
+  {
+    return CreateObject(SnakeBody, r, c);
   }
 }
