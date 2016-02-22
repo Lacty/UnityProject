@@ -61,11 +61,11 @@ public class SnakeStage : MonoBehaviour {
 
   void Update()
   {
-    updateDirection();
+    UpdateDirection();
     if (!ShouldUpdate()) return;
   }
 
-  private void updateDirection()
+  private void UpdateDirection()
   {
     if      (!IsBackDirInput(KeyCode.W)) _nextDir.Set( 0,  1, 0);
     else if (!IsBackDirInput(KeyCode.D)) _nextDir.Set( 1,  0, 0);
