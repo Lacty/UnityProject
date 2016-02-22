@@ -61,7 +61,19 @@ public class SnakeStage : MonoBehaviour {
 
   void Update()
   {
+    updateDirection();
     if (!shouldUpdate()) return;
+  }
+
+  private void updateDirection()
+  {
+    if (Input.GetKeyDown(KeyCode.W)) Debug.Log(getDirection());
+  }
+
+  private Vector3 getDirection()
+  {
+    return _snake[0].transform.position
+         - _snake[1].transform.position;
   }
 
   private bool shouldUpdate()
