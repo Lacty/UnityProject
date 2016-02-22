@@ -50,7 +50,7 @@ public class SnakeStage : MonoBehaviour {
 
   private readonly GameObject[,] _cells = new GameObject[Rows, Columns];
 
-  private Vector3 _snakeDir = new Vector3(0, -1, 0);
+  private Vector3 _nextDir = new Vector3(0, -1, 0);
   // 配列だが複数形でないので注意
   private List<GameObject> _snake = new List<GameObject>();
 
