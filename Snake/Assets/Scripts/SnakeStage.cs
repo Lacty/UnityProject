@@ -62,21 +62,33 @@ public class SnakeStage : MonoBehaviour {
   void Update()
   {
     updateDirection();
-    if (!shouldUpdate()) return;
+    if (!ShouldUpdate()) return;
   }
 
   private void updateDirection()
   {
-    if (Input.GetKeyDown(KeyCode.W)) Debug.Log(getDirection());
+    if      (!IsBackDirInput(KeyCode.W)) _nextDir.Set( 0,  1, 0);
+    else if (!IsBackDirInput(KeyCode.D)) _nextDir.Set( 1,  0, 0);
+    else if (!IsBackDirInput(KeyCode.S)) _nextDir.Set( 0, -1, 0);
+    else if (!IsBackDirInput(KeyCode.A)) _nextDir.Set(-1,  0, 0);
   }
 
-  private Vector3 getDirection()
+  private bool IsBackDirInput(KeyCode key)
+  {
+    if      (Input.GetKeyDown(key) && GetDirection().y == -1) return true;
+    else if (Input.GetKeyDown(key) && GetDirection().y ==  1) return true;
+    else if (Input.GetKeyDown(key) && GetDirection().x == -1) return true;
+    else if (Input.GetKeyDown(key) && GetDirection().x ==  1) return true;
+    return false;
+  }
+
+  private Vector3 GetDirection()
   {
     return _snake[0].transform.position
          - _snake[1].transform.position;
   }
 
-  private bool shouldUpdate()
+  private bool ShouldUpdate()
   {
     _updateCount += Time.deltaTime;
     if (_updateCount <= UpdateRate) return false;
@@ -119,7 +131,7 @@ public class SnakeStage : MonoBehaviour {
     gameObj.transform.parent = gameObject.transform;
     return gameObj;
   }
-  
+
   private GameObject CreateCell(int r, int c)
   {
     return CreateObject(Cell, r, c);
