@@ -61,31 +61,57 @@ public class SnakeStage : MonoBehaviour {
 
   void Update()
   {
+    UpdateGame();
+  }
+
+  private void UpdateGame()
+  {
     UpdateDirection();
     if (!ShouldUpdate()) return;
+    MoveSnake();
+  }
+
+  private void MoveSnake()
+  {
+    _snake[0].transform.Translate(_nextDir);
   }
 
   private void UpdateDirection()
   {
-    if      (!IsBackDirInput(KeyCode.W)) _nextDir.Set( 0,  1, 0);
-    else if (!IsBackDirInput(KeyCode.D)) _nextDir.Set( 1,  0, 0);
-    else if (!IsBackDirInput(KeyCode.S)) _nextDir.Set( 0, -1, 0);
-    else if (!IsBackDirInput(KeyCode.A)) _nextDir.Set(-1,  0, 0);
+    if      (IsValidInput(KeyCode.W)) _nextDir.Set( 0,  1, 0);
+    else if (IsValidInput(KeyCode.S)) _nextDir.Set( 0, -1, 0);
+    else if (IsValidInput(KeyCode.A)) _nextDir.Set(-1,  0, 0);
+    else if (IsValidInput(KeyCode.D)) _nextDir.Set( 1,  0, 0);
   }
-
-  private bool IsBackDirInput(KeyCode key)
+  
+  private bool IsValidInput(KeyCode key)
   {
-    if      (Input.GetKeyDown(key) && GetDirection().y == -1) return true;
-    else if (Input.GetKeyDown(key) && GetDirection().y ==  1) return true;
-    else if (Input.GetKeyDown(key) && GetDirection().x == -1) return true;
-    else if (Input.GetKeyDown(key) && GetDirection().x ==  1) return true;
+    switch (key)
+    {
+      case KeyCode.W:
+        if (Input.GetKeyDown(KeyCode.W))
+        if (GetDirection(0).y != -1) { return true; }
+      break;
+      case KeyCode.S:
+        if (Input.GetKeyDown(KeyCode.S))
+        if (GetDirection(0).y !=  1) { return true; }
+      break;
+      case KeyCode.A:
+        if (Input.GetKeyDown(KeyCode.A))
+        if (GetDirection(0).x !=  1) { return true; }
+      break;
+      case KeyCode.D:
+        if (Input.GetKeyDown(KeyCode.D))
+        if (GetDirection(0).x != -1) { return true; }
+      break;
+    }
     return false;
   }
 
-  private Vector3 GetDirection()
+  private Vector3 GetDirection(int index)
   {
-    return _snake[0].transform.position
-         - _snake[1].transform.position;
+    return _snake[index].transform.position
+         - _snake[index + 1].transform.position;
   }
 
   private bool ShouldUpdate()
