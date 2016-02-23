@@ -57,7 +57,7 @@ public class SnakeStage : MonoBehaviour {
   private float _updateCount = 0.0f;
 
   [SerializeField]
-  private int NumOfCreate = 3;
+  private int NumOfGrow = 3;
 
   private const int Columns = 10;
   private const int Rows = 10;
@@ -83,6 +83,42 @@ public class SnakeStage : MonoBehaviour {
     UpdateDirection();
     if (!ShouldUpdate()) return;
     MoveSnake();
+    EatFeed();
+  }
+
+  private void EatFeed()
+  {
+    if (_snake[0].transform.position.x == _feed.transform.position.x)
+    {
+      if (_snake[0].transform.position.y == _feed.transform.position.y)
+      {
+        GrowUp(NumOfGrow);
+        MoveFeed();
+      }
+    }
+  }
+
+  private void MoveFeed()
+  {
+    var list = GetPutablePos();
+    _feed.transform.position = list[Random.Range(0, list.Count)];
+  }
+
+  private List<Vector3> GetPutablePos()
+  {
+    List<Vector3> v = new List<Vector3>();
+    for (int r = 0; r < Rows; r++)
+    {
+      for (int c = 0; c < Columns; c++)
+      {
+        v.Add(new Vector3(r, c, 0));
+      }
+    }
+    foreach (var snake in _snake)
+    {
+      v.Remove(new Vector3(snake.transform.position.x, snake.transform.position.y, 0));
+    }
+    return v;
   }
 
   private void MoveSnake()
@@ -97,10 +133,10 @@ public class SnakeStage : MonoBehaviour {
 
   private void LoopMove()
   {
-    if (_snake[0].transform.position.x >=    Rows) _snake[0].transform.Translate(-Rows,        0, 0);
-    if (_snake[0].transform.position.x <        0) _snake[0].transform.Translate( Rows,        0, 0);
-    if (_snake[0].transform.position.y >= Columns) _snake[0].transform.Translate(    0, -Columns, 0);
-    if (_snake[0].transform.position.y <        0) _snake[0].transform.Translate(    0,  Columns, 0);
+    if (_snake[0].transform.position.x >= Rows) _snake[0].transform.Translate(-Rows, 0, 0);
+    if (_snake[0].transform.position.x < 0) _snake[0].transform.Translate(Rows, 0, 0);
+    if (_snake[0].transform.position.y >= Columns) _snake[0].transform.Translate(0, -Columns, 0);
+    if (_snake[0].transform.position.y < 0) _snake[0].transform.Translate(0, Columns, 0);
   }
 
   private void GrowUp(int num)
@@ -114,30 +150,30 @@ public class SnakeStage : MonoBehaviour {
 
   private void UpdateDirection()
   {
-    if      (IsValidInput(KeyCode.W)) _nextDir.Set( 0,  1, 0);
-    else if (IsValidInput(KeyCode.S)) _nextDir.Set( 0, -1, 0);
-    else if (IsValidInput(KeyCode.A)) _nextDir.Set(-1,  0, 0);
-    else if (IsValidInput(KeyCode.D)) _nextDir.Set( 1,  0, 0);
+    if (IsValidInput(KeyCode.W)) _nextDir.Set(0, 1, 0);
+    else if (IsValidInput(KeyCode.S)) _nextDir.Set(0, -1, 0);
+    else if (IsValidInput(KeyCode.A)) _nextDir.Set(-1, 0, 0);
+    else if (IsValidInput(KeyCode.D)) _nextDir.Set(1, 0, 0);
   }
-  
+
   private bool IsValidInput(KeyCode key)
   {
     switch (key)
     {
       case KeyCode.W:
-        if (Input.GetKeyDown(KeyCode.W))
+      if (Input.GetKeyDown(KeyCode.W))
         if (GetDirection(0).y != -1) { return true; }
       break;
       case KeyCode.S:
-        if (Input.GetKeyDown(KeyCode.S))
-        if (GetDirection(0).y !=  1) { return true; }
+      if (Input.GetKeyDown(KeyCode.S))
+        if (GetDirection(0).y != 1) { return true; }
       break;
       case KeyCode.A:
-        if (Input.GetKeyDown(KeyCode.A))
-        if (GetDirection(0).x !=  1) { return true; }
+      if (Input.GetKeyDown(KeyCode.A))
+        if (GetDirection(0).x != 1) { return true; }
       break;
       case KeyCode.D:
-        if (Input.GetKeyDown(KeyCode.D))
+      if (Input.GetKeyDown(KeyCode.D))
         if (GetDirection(0).x != -1) { return true; }
       break;
     }
