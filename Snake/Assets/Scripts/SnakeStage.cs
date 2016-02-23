@@ -45,6 +45,9 @@ public class SnakeStage : MonoBehaviour {
   private float UpdateRate = 0.3f;
   private float _updateCount = 0.0f;
 
+  [SerializeField]
+  private int NumOfCreate = 3;
+
   private const int Columns = 10;
   private const int Rows = 10;
 
@@ -87,6 +90,15 @@ public class SnakeStage : MonoBehaviour {
     if (_snake[0].transform.position.x <        0) _snake[0].transform.Translate( Rows,        0, 0);
     if (_snake[0].transform.position.y >= Columns) _snake[0].transform.Translate(    0, -Columns, 0);
     if (_snake[0].transform.position.y <        0) _snake[0].transform.Translate(    0,  Columns, 0);
+  }
+
+  private void GrowUp(int num)
+  {
+    var pos = _snake[_snake.Count - 1].transform.position;
+    for (int i = 0; i < num; i++)
+    {
+      _snake.Add(CreateSnakeBody((int)pos.x, (int)pos.y));
+    }
   }
 
   private void UpdateDirection()
