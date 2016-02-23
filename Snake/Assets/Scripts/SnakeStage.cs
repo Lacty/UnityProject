@@ -42,7 +42,7 @@ public class SnakeStage : MonoBehaviour {
   }
 
   [SerializeField]
-  private const float UpdateRate = 0.6f;
+  private float UpdateRate = 0.3f;
   private float _updateCount = 0.0f;
 
   private const int Columns = 10;
@@ -73,6 +73,10 @@ public class SnakeStage : MonoBehaviour {
 
   private void MoveSnake()
   {
+    for (int i = _snake.Count - 1; i > 0; i--)
+    {
+      _snake[i].transform.position = _snake[i - 1].transform.position;
+    }
     _snake[0].transform.Translate(_nextDir);
   }
 
