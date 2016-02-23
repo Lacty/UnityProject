@@ -78,6 +78,15 @@ public class SnakeStage : MonoBehaviour {
       _snake[i].transform.position = _snake[i - 1].transform.position;
     }
     _snake[0].transform.Translate(_nextDir);
+    LoopMove();
+  }
+
+  private void LoopMove()
+  {
+    if (_snake[0].transform.position.x >=    Rows) _snake[0].transform.Translate(-Rows,        0, 0);
+    if (_snake[0].transform.position.x <        0) _snake[0].transform.Translate( Rows,        0, 0);
+    if (_snake[0].transform.position.y >= Columns) _snake[0].transform.Translate(    0, -Columns, 0);
+    if (_snake[0].transform.position.y <        0) _snake[0].transform.Translate(    0,  Columns, 0);
   }
 
   private void UpdateDirection()
