@@ -42,6 +42,17 @@ public class SnakeStage : MonoBehaviour {
   }
 
   [SerializeField]
+  private GameObject _feed = null;
+  public GameObject Feed {
+    get
+    {
+      if (_feed != null) return _feed;
+      _feed = Resources.Load<GameObject>("Feed/Feed");
+      return _feed;
+    }
+  }
+
+  [SerializeField]
   private float UpdateRate = 0.3f;
   private float _updateCount = 0.0f;
 
@@ -151,6 +162,7 @@ public class SnakeStage : MonoBehaviour {
   {
     InitCells();
     InitSnake();
+    _feed = CreateFeed(5, 5);
   }
 
   private void InitCells()
@@ -196,5 +208,10 @@ public class SnakeStage : MonoBehaviour {
   private GameObject CreateSnakeBody(int r, int c)
   {
     return CreateObject(SnakeBody, r, c);
+  }
+
+  private GameObject CreateFeed(int r, int c)
+  {
+    return CreateObject(Feed, r, c);
   }
 }
