@@ -1,6 +1,5 @@
 ﻿
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 using Assets.Scripts;
@@ -68,6 +67,11 @@ public class SnakeStage : MonoBehaviour {
   // 配列だが複数形でないので注意
   private List<GameObject> _snake = new List<GameObject>();
 
+  private GameObject _lightGameObject;
+  private bool _isGameOver = false;
+
+  private int _score = 0;
+
   void Start()
   {
     InitGame();
@@ -78,12 +82,43 @@ public class SnakeStage : MonoBehaviour {
     UpdateGame();
   }
 
+  void OnGUI()
+  {
+    if (!_isGameOver) return;
+    int width = 100;
+    int height = 60;
+    float halfWidth = width * 0.5f;
+    float halfHeight = height * 0.5f;
+    float halfWindowWidth = Screen.width * 0.5f;
+    float halfWindowHeight = Screen.height * 0.5f;
+    var rect = new Rect(halfWindowWidth - halfWidth,
+                        halfWindowHeight - halfHeight,
+                        width, height);
+    if (GUI.Button(rect, _score + "Eat! Restart"))
+    {
+      ResetGame();
+    }
+  }
+
   private void UpdateGame()
   {
+    if (_isGameOver) return;
     UpdateDirection();
     if (!ShouldUpdate()) return;
     MoveSnake();
     EatFeed();
+    if (!IsEatMySelf()) return;
+    _isGameOver = true;
+  }
+
+  private bool IsEatMySelf()
+  {
+    // 4番目以降でないと体に当たることはないので３から回す
+    for (int i = 3; i < _snake.Count; i++)
+    {
+      if (_snake[0].transform.position == _snake[i].transform.position) return true;
+    }
+    return false;
   }
 
   private void EatFeed()
@@ -94,6 +129,7 @@ public class SnakeStage : MonoBehaviour {
       {
         GrowUp(NumOfGrow);
         MoveFeed();
+        _score++;
       }
     }
   }
@@ -106,19 +142,19 @@ public class SnakeStage : MonoBehaviour {
 
   private List<Vector3> GetPutablePos()
   {
-    List<Vector3> v = new List<Vector3>();
+    List<Vector3> sum = new List<Vector3>();
     for (int r = 0; r < Rows; r++)
     {
       for (int c = 0; c < Columns; c++)
       {
-        v.Add(new Vector3(r, c, 0));
+        sum.Add(new Vector3(r, c, 0));
       }
     }
     foreach (var snake in _snake)
     {
-      v.Remove(new Vector3(snake.transform.position.x, snake.transform.position.y, 0));
+      sum.Remove(new Vector3(snake.transform.position.x, snake.transform.position.y, 0));
     }
-    return v;
+    return sum;
   }
 
   private void MoveSnake()
@@ -196,9 +232,33 @@ public class SnakeStage : MonoBehaviour {
 
   private void InitGame()
   {
+    _isGameOver = false;
     InitCells();
     InitSnake();
     _feed = CreateFeed(5, 5);
+    CreateLight();
+  }
+
+  private void ResetGame()
+  {
+    _isGameOver = false;
+    _score = 0;
+    InitSnake();
+  }
+
+  private void CreateLight()
+  {
+    // 複数生成しないようにする
+    var light = GameObject.Find("Directional Light");
+    if (light != null) return;
+    _lightGameObject = new GameObject("Directional Light");
+    _lightGameObject.AddComponent<Light>();
+    _lightGameObject.GetComponent<Light>().type = LightType.Directional;
+    _lightGameObject.GetComponent<Light>().color = new Color(1, 0.96f, 0.86f, 1);
+    _lightGameObject.transform.Rotate(50, 330, 0);
+    _lightGameObject.transform.position = new Vector3(0, 3, 0);
+    // シーンがロードされるときライトを消さないようにする
+    DontDestroyOnLoad(_lightGameObject);
   }
 
   private void InitCells()
@@ -214,12 +274,19 @@ public class SnakeStage : MonoBehaviour {
 
   private void InitSnake()
   {
+    foreach (var snake in _snake)
+    {
+      DestroyObject(snake);
+    }
     SnakeHead.GetComponent<Snake>().Type = SnakeType.Head;
     SnakeBody.GetComponent<Snake>().Type = SnakeType.Body;
+    _snake.Clear();
     _snake.Add(CreateSnakeHead(0, Columns - 4));
     _snake.Add(CreateSnakeBody(0, Columns - 3));
     _snake.Add(CreateSnakeBody(0, Columns - 2));
     _snake.Add(CreateSnakeBody(0, Columns - 1));
+
+    _nextDir.Set(0, -1, 0);
   }
 
   private GameObject CreateObject(GameObject origin, int r, int c)
