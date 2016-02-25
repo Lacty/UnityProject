@@ -248,17 +248,12 @@ public class SnakeStage : MonoBehaviour {
 
   private void CreateLight()
   {
-    // 複数生成しないようにする
-    var light = GameObject.Find("Directional Light");
-    if (light != null) return;
     _lightGameObject = new GameObject("Directional Light");
     _lightGameObject.AddComponent<Light>();
     _lightGameObject.GetComponent<Light>().type = LightType.Directional;
     _lightGameObject.GetComponent<Light>().color = new Color(1, 0.96f, 0.86f, 1);
     _lightGameObject.transform.Rotate(50, 330, 0);
     _lightGameObject.transform.position = new Vector3(0, 3, 0);
-    // シーンがロードされるときライトを消さないようにする
-    DontDestroyOnLoad(_lightGameObject);
   }
 
   private void InitCells()
