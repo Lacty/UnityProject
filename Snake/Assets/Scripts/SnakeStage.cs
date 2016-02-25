@@ -108,7 +108,27 @@ public class SnakeStage : MonoBehaviour {
     MoveSnake();
     EatFeed();
     if (!IsEatMySelf()) return;
+    StartCoroutine(Diffusion());
     _isGameOver = true;
+  }
+
+  private IEnumerator<GameObject> Diffusion()
+  {
+    List<Vector3> poss = new List<Vector3>();
+    foreach (var snake in _snake)
+    {
+      poss.Add(new Vector3(Random.Range(0, Rows - 1), Random.Range(0, Columns - 1), 0));
+    }
+    for (int i = 0; i < 20; i++)
+    {
+      int k = 0;
+      foreach (var snake in _snake)
+      {
+        var dir = snake.transform.position - poss[k++];
+        snake.transform.position -= dir *= 0.2f;
+      }
+      yield return null;
+    }
   }
 
   private bool IsEatMySelf()
