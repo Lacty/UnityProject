@@ -117,18 +117,26 @@ public class SnakeStage : MonoBehaviour {
     List<Vector3> poss = new List<Vector3>();
     foreach (var snake in _snake)
     {
-      poss.Add(new Vector3(Random.Range(0, Rows - 1), Random.Range(0, Columns - 1), 0));
+      poss.Add(new Vector3(Random.Range(-Rows * 2, Rows * 2),
+                           Random.Range(-Columns * 2, Columns * 2),
+                           Random.Range(-Rows * 2, Rows * 2)));
     }
+
     for (int i = 0; i < 20; i++)
     {
       int k = 0;
       foreach (var snake in _snake)
       {
         var dir = snake.transform.position - poss[k++];
-        snake.transform.position -= dir *= 0.2f;
+        snake.transform.position -= dir *= 0.06f;
       }
       yield return null;
     }
+    foreach (var snake in _snake)
+    {
+      DestroyObject(snake);
+    }
+    _snake.Clear();
   }
 
   private bool IsEatMySelf()
